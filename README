@@ -1,0 +1,14 @@
+Title:  Scramble
+Author: Matthew Boyette
+Date:   3/8/2012
+	
+This is a simple yet challenging word puzzle game where the user has three chances to 
+guess a word that has had its letters rearranged in a random order. The user's total 
+score is a number between zero and five, inclusively. It is determined by dividing the 
+user's total number of points by the total number of puzzles that have been attempted. 
+Guessing a puzzle on the first try is worth five points, two attempts is worth three 
+points, and using all of your guesses to solve a puzzle will only earn you one point. 
+The user also has the option to give up at any time. Regardless of whether the user 
+gives up or fails all three guesses the answer to the puzzle will be revealed before 
+the game sets itself up for another round. A user's current overall score and the 
+number of puzzles they have attempted are shown at all times.

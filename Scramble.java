@@ -3,12 +3,14 @@
 	Author: Matthew Boyette
 	Date:   3/8/2012
 	
-	This is a simple yet challenging word puzzle game where the user has three chances to guess a word that has had its letters rearranged in
-	a random order. The user's total score is a number between zero and five, inclusively. It is determined by dividing the user's total number
-	of points by the total number of puzzles that have been attempted. Guessing a puzzle on the first try is worth five points, two attempts is
-	worth three points, and using all of your guesses to solve a puzzle will only earn you one point. The user also has the option to give up at
-	any time. Regardless of whether the user gives up or fails all three guesses the answer to the puzzle will be revealed before the game sets
-	itself up for another round. A user's current score and the number of puzzles they have attempted are shown at all times.
+	This is a simple yet challenging word puzzle game where the user has three chances to guess a word that has 
+	had its letters rearranged in 	a random order. The user's total score is a number between zero and five, 
+	inclusively. It is determined by dividing the user's total number of points by the total number of puzzles 
+	that have been attempted. Guessing a puzzle on the first try is worth five points, two attempts is worth 
+	three points, and using all of your guesses to solve a puzzle will only earn you one point. The user also 
+	has the option to give up at any time. Regardless of whether the user gives up or fails all three guesses 
+	the answer to the puzzle will be revealed before the game sets itself up for another round. A user's current 
+	score and the number of puzzles they have attempted are shown at all times.
 */
 
 import api.gui.*;
@@ -59,7 +61,8 @@ public final class Scramble
 	private static final String getTitle()
 	{
 		DecimalFormat twoDecimalPlaces = new DecimalFormat("##.##");
-		return "Score: " + Double.valueOf(twoDecimalPlaces.format(calculateScore())) + "        Puzzles: " + totalWords;
+		return "Score: " + Double.valueOf(twoDecimalPlaces.format(calculateScore())) + 
+			"        Puzzles: " + totalWords;
 	}
 	
 	private static final Object[] getWordBank()
@@ -135,7 +138,8 @@ public final class Scramble
 		// Check the user's guess.
 		if (checkGuess(input.getText()))
 		{
-			JOptionPane.showMessageDialog(window, "Congratulations, your guess was correct!", "Correct!", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(window, "Congratulations, your guess was correct!", 
+				"Correct!", JOptionPane.INFORMATION_MESSAGE);
 			if (currentGuesses == 3)
 			{
 				currentScore += 5;
@@ -152,7 +156,8 @@ public final class Scramble
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(window, "Sorry, your guess was incorrect!", "Incorrect!", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(window, "Sorry, your guess was incorrect!", 
+				"Incorrect!", JOptionPane.INFORMATION_MESSAGE);
 			currentGuesses--;
 			if (currentGuesses <= 0)
 			{
@@ -349,7 +354,8 @@ public final class Scramble
         // StringBuilder objects are the most efficient way to perform variable-length string concatenation.
         StringBuilder output = new StringBuilder(word.length());
         
-        // Pick a letter randomly from the list, remove it from the list, and then append it to the output string.
+        // Pick a letter randomly from the list, remove it from the list, 
+        // and then append it to the output string.
         while(characters.size() != 0)
         {
         	int randPicker = Games.getRandomInteger(0, characters.size(), false);
