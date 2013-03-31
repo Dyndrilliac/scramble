@@ -234,6 +234,8 @@ public final class Scramble
 					throw new IllegalArgumentException("myDrawGUI Error : argument[0] is of incorrect type.");
 				}
 				
+				pickWord();
+				
 				ApplicationWindow window         = (ApplicationWindow)arguments[0];
 				Container         contentPane    = window.getContentPane();
 				JPanel            outputPanel    = new JPanel();
@@ -266,24 +268,20 @@ public final class Scramble
 		
 		if (choice == JOptionPane.YES_OPTION)
 		{
-			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(480, 125), true, false, 
-				true, myActionPerformed, myDrawGUI);
+			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(380, 125), true, false, 
+				myActionPerformed, myDrawGUI);
 		}
 		else if (choice == JOptionPane.NO_OPTION)
 		{
-			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(480, 125), false, false, 
-				true, myActionPerformed, myDrawGUI);
+			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(380, 125), false, false, 
+				myActionPerformed, myDrawGUI);
 		}
 		else
 		{
 			return;
 		}
 		
-		pickWord();
-		
-		mainWindow.drawGUI();
-		mainWindow.setAlwaysOnTop(true);
-		mainWindow.setVisible(true);
+		mainWindow.setIconImageByResourceName("icon.png");
 	}
 	
 	private static final void pickWord()
