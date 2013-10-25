@@ -4,7 +4,7 @@
 	Date:   3/8/2012
 	
 	This is a simple yet challenging word puzzle game where the user has three chances to guess a word that has 
-	had its letters rearranged in 	a random order. The user's total score is a number between zero and five, 
+	had its letters rearranged in a random order. The user's total score is a number between zero and five, 
 	inclusively. It is determined by dividing the user's total number of points by the total number of puzzles 
 	that have been attempted. Guessing a puzzle on the first try is worth five points, two attempts is worth 
 	three points, and using all of your guesses to solve a puzzle will only earn you one point. The user also 
@@ -16,16 +16,24 @@
 import api.gui.*;
 import api.util.*;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public final class Scramble
 {
+	private static boolean  debugMode      = false;
 	private static Object[] wordsArray     = getWordBank();
 	private static String   scrambledWord  = "";
 	private static int      currentGuesses = 0;
@@ -60,9 +68,7 @@ public final class Scramble
 	
 	private static final String getTitle()
 	{
-		DecimalFormat twoDecimalPlaces = new DecimalFormat("##.##");
-		return "Score: " + Double.valueOf(twoDecimalPlaces.format(calculateScore())) + 
-			"        Puzzles: " + totalWords;
+		return "Score: " + String.format("%.2f", calculateScore()) + "        Puzzles: " + totalWords;
 	}
 	
 	private static final Object[] getWordBank()
@@ -169,7 +175,9 @@ public final class Scramble
 	public static final void main(final String[] args)
 	{
 		ApplicationWindow mainWindow = null;
-		int choice = Support.promptDebugMode(mainWindow);
+		int               choice     = Support.promptDebugMode(mainWindow);
+		
+		debugMode = (choice == JOptionPane.YES_OPTION);
 		
 		// Define a self-contained ActionListener event handler.
 		EventHandler myActionPerformed = new EventHandler()
@@ -266,20 +274,8 @@ public final class Scramble
 			}
 		};
 		
-		if (choice == JOptionPane.YES_OPTION)
-		{
-			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(380, 125), true, false, 
-				myActionPerformed, myDrawGUI);
-		}
-		else if (choice == JOptionPane.NO_OPTION)
-		{
-			mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(380, 125), false, false, 
-				myActionPerformed, myDrawGUI);
-		}
-		else
-		{
-			return;
-		}
+		mainWindow = new ApplicationWindow(null, getTitle(), new Dimension(380, 125), debugMode, false, 
+			myActionPerformed, myDrawGUI);
 		
 		mainWindow.setIconImageByResourceName("icon.png");
 	}
