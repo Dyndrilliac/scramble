@@ -19,6 +19,7 @@ import api.util.Games;
 import api.util.Support;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -35,14 +36,14 @@ import javax.swing.JTextField;
 
 public class Scramble
 {
-	protected final static Object[] getWordBank()
+	protected final static Object[] getWordBank(final Component parent, final boolean isDebugging)
 	{
 		ArrayList<String>	words		= new ArrayList<String>();
 		String				filePath	= null;
 		
 		do
 		{
-			filePath = Support.getFilePath(null, true, false);
+			filePath = Support.getFilePath(parent, true, isDebugging);
 		}
 		while ((filePath == null) || filePath.isEmpty());
 		
@@ -121,8 +122,8 @@ public class Scramble
 	
 	public Scramble()
 	{
-		this.setDebugging((Support.promptDebugMode(this.getWindow()) == JOptionPane.YES_OPTION));
-		this.setWordsArray(Scramble.getWordBank());
+		this.setDebugging(Support.promptDebugMode(this.getWindow()));
+		this.setWordsArray(Scramble.getWordBank(this.getWindow(), this.isDebugging()));
 		
 		// Define a self-contained ActionListener event handler.
 		EventHandler myActionPerformed = new EventHandler(this)
