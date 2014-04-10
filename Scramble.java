@@ -128,6 +128,8 @@ public class Scramble
 		// Define a self-contained ActionListener event handler.
 		EventHandler myActionPerformed = new EventHandler(this)
 		{
+			private final static long	serialVersionUID	= 1L;
+
 			@Override
 			public final void run(final Object... arguments) throws IllegalArgumentException
 			{
@@ -179,6 +181,8 @@ public class Scramble
 		// Define a self-contained interface construction event handler.
 		EventHandler myDrawGUI = new EventHandler(this)
 		{
+			private final static long	serialVersionUID	= 1L;
+
 			@Override
 			public final void run(final Object... arguments) throws IllegalArgumentException
 			{
