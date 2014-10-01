@@ -18,6 +18,7 @@ import api.util.EventHandler;
 import api.util.Games;
 import api.util.Support;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -84,7 +85,7 @@ public class Scramble
 	
 	public final static void main(final String[] args)
 	{
-		new Scramble();
+		new Scramble(args);
 	}
 	
 	protected final static String shuffleWord(final String word)
@@ -114,64 +115,52 @@ public class Scramble
 	private int					currentGuesses	= 0;
 	private int					currentScore	= 0;
 	private int					currentWord		= 0;
+	private JTextField			input			= null;
 	private boolean				isDebugging		= false;
+	private JLabel				label			= null;
 	private String				scrambledWord	= "";
 	private int					totalWords		= 0;
 	private ApplicationWindow	window			= null;
 	private Object[]			wordsArray		= null;
 	
-	public Scramble()
+	public Scramble(final String[] args)
 	{
 		this.setDebugging(Support.promptDebugMode(this.getWindow()));
 		this.setWordsArray(Scramble.getWordBank(this.getWindow(), this.isDebugging()));
 		
 		// Define a self-contained ActionListener event handler.
-		EventHandler myActionPerformed = new EventHandler(this)
+		EventHandler<Scramble> myActionPerformed = new EventHandler<Scramble>(this)
 		{
-			private final static long	serialVersionUID	= 1L;
+			private final static long serialVersionUID = 1L;
 
 			@Override
-			public final void run(final Object... arguments) throws IllegalArgumentException
-			{
-				if ((arguments.length <= 1) || (arguments.length > 2))
-				{
-					throw new IllegalArgumentException("myActionPerformed Error : incorrect number of arguments.");
-				}
-				else if (!(arguments[0] instanceof ActionEvent))
-				{
-					throw new IllegalArgumentException("myActionPerformed Error : argument[0] is of incorrect type.");
-				}
-				else if (!(arguments[1] instanceof ApplicationWindow))
-				{
-					throw new IllegalArgumentException("myActionPerformed Error : argument[1] is of incorrect type.");
-				}
-				
-				ActionEvent			event	= (ActionEvent)arguments[0];
-				ApplicationWindow	window	= (ApplicationWindow)arguments[1];
-				Scramble			parent	= ((Scramble)this.parent);
+			public final void run(final AWTEvent event)
+			{	
+				ActionEvent	actionEvent	= (ActionEvent)event;
+				Scramble	parent		= this.getParent();
 				
 				/*
 					JDK 7 allows string objects as the expression in a switch statement.
 					This generally produces more efficient byte code compared to a chain of if statements.
 					http://docs.oracle.com/javase/7/docs/technotes/guides/language/strings-switch.html
 				*/
-				switch (event.getActionCommand())
+				switch (actionEvent.getActionCommand())
 				{
 					case "Guess":
 						
-						parent.handleInput(arguments);
+						parent.handleInput();
 						break;
 					
 					case "Give Up":
 						
-						parent.revealAnswer(window);
+						parent.revealAnswer(parent.getWindow());
 						break;
 					
 					default:
 						
-						if (event.getSource() instanceof JTextField)
+						if (actionEvent.getSource() instanceof JTextField)
 						{
-							parent.handleInput(arguments);
+							parent.handleInput();
 						}
 						break;
 				}
@@ -179,32 +168,22 @@ public class Scramble
 		};
 		
 		// Define a self-contained interface construction event handler.
-		EventHandler myDrawGUI = new EventHandler(this)
+		EventHandler<Scramble> myDrawGUI = new EventHandler<Scramble>(this)
 		{
-			private final static long	serialVersionUID	= 1L;
+			private final static long serialVersionUID = 1L;
 
 			@Override
-			public final void run(final Object... arguments) throws IllegalArgumentException
+			public final void run(final ApplicationWindow window)
 			{
-				if (arguments.length <= 0)
-				{
-					throw new IllegalArgumentException("myDrawGUI Error : incorrect number of arguments.");
-				}
-				else if (!(arguments[0] instanceof ApplicationWindow))
-				{
-					throw new IllegalArgumentException("myDrawGUI Error : argument[0] is of incorrect type.");
-				}
-				
-				ApplicationWindow	window		= (ApplicationWindow)arguments[0];
-				Container			contentPane	= window.getContentPane();
-				Scramble			parent		= ((Scramble)this.parent);
+				Scramble	parent		= this.getParent();
+				Container	contentPane	= window.getContentPane();
 				
 				parent.pickWord();
 				
 				JPanel		outputPanel		= new JPanel();
 				JLabel		scrambledLabel	= new JLabel("Scrambled Word:   " + parent.getScrambledWord());
 				JPanel		textPanel		= new JPanel();
-				JTextField	inputText		= new JTextField(25);
+				JTextField	inputText		= new JTextField(30);
 				JPanel		controlPanel	= new JPanel();
 				JButton		guessButton		= new JButton("Guess");
 				JButton		giveUpButton	= new JButton("Give Up");
@@ -215,16 +194,20 @@ public class Scramble
 				contentPane.add(outputPanel, BorderLayout.NORTH);
 				textPanel.setLayout(new FlowLayout());
 				inputText.addActionListener(window);
+				inputText.setFont(Support.DEFAULT_TEXT_FONT);
+				scrambledLabel.setFont(Support.DEFAULT_TEXT_FONT);
 				textPanel.add(inputText);
 				contentPane.add(textPanel, BorderLayout.CENTER);
 				controlPanel.setLayout(new FlowLayout());
 				guessButton.addActionListener(window);
+				guessButton.setFont(Support.DEFAULT_TEXT_FONT);
 				controlPanel.add(guessButton);
 				giveUpButton.addActionListener(window);
+				giveUpButton.setFont(Support.DEFAULT_TEXT_FONT);
 				controlPanel.add(giveUpButton);
 				contentPane.add(controlPanel, BorderLayout.SOUTH);
-				window.getElements().add(scrambledLabel);
-				window.getElements().add(inputText);
+				parent.setInput(inputText);
+				parent.setLabel(scrambledLabel);
 			}
 		};
 		
@@ -272,6 +255,16 @@ public class Scramble
 		return this.currentWord;
 	}
 	
+	public final JTextField getInput()
+	{
+		return this.input;
+	}
+	
+	public final JLabel getLabel()
+	{
+		return this.label;
+	}
+	
 	public final String getScrambledWord()
 	{
 		return this.scrambledWord;
@@ -299,30 +292,19 @@ public class Scramble
 	
 	public final void handleInput(final Object... arguments)
 	{
-		ApplicationWindow window = (ApplicationWindow)arguments[1];
-		JTextField input = null;
-		
-		for (int i = 0; i < window.getElements().size(); i++)
-		{
-			if (window.getElements().get(i) instanceof JTextField)
-			{
-				input = (JTextField)window.getElements().get(i);
-			}
-		}
-		
-		if (input == null)
+		if (this.getInput() == null)
 		{
 			Support.displayException(window, new Exception("Can't get the input element!"), true);
 			return;
 		}
-		else if (input.getText() == null)
+		else if (this.getInput().getText() == null)
 		{
 			Support.displayException(window, new Exception("Can't get the input element's text!"), true);
 			return;
 		}
 		
 		// Check the user's guess.
-		if (this.checkGuess(input.getText()))
+		if (this.checkGuess(this.getInput().getText()))
 		{
 			JOptionPane.showMessageDialog(window, "Congratulations, your guess was correct!", "Correct!", JOptionPane.INFORMATION_MESSAGE);
 			
@@ -375,28 +357,9 @@ public class Scramble
 		// Reset the puzzle.
 		this.pickWord();
 		// Reset the GUI.
-		JTextField input = null;
-		JLabel label = null;
-		
-		for (int i = 0; i < window.getElements().size(); i++)
-		{
-			if (window.getElements().get(i) instanceof JTextField)
-			{
-				input = (JTextField)window.getElements().get(i);
-			}
-		}
-		
-		for (int i = 0; i < window.getElements().size(); i++)
-		{
-			if (window.getElements().get(i) instanceof JLabel)
-			{
-				label = (JLabel)window.getElements().get(i);
-			}
-		}
-		
-		label.setText("Scrambled Word:   " + this.getScrambledWord());
-		input.setText("");
-		input.grabFocus();
+		this.getLabel().setText("Scrambled Word:   " + this.getScrambledWord());
+		this.getInput().setText("");
+		this.getInput().grabFocus();
 		window.setTitle(this.getTitle());
 	}
 	
@@ -429,6 +392,16 @@ public class Scramble
 	protected final void setDebugging(final boolean isDebugging)
 	{
 		this.isDebugging = isDebugging;
+	}
+	
+	protected final void setInput(final JTextField input)
+	{
+		this.input = input;
+	}
+	
+	protected final void setLabel(final JLabel label)
+	{
+		this.label = label;
 	}
 	
 	protected final void setScrambledWord(final String scrambledWord)
