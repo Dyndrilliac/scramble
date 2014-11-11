@@ -15,7 +15,7 @@
 
 import api.gui.ApplicationWindow;
 import api.util.EventHandler;
-import api.util.Games;
+import api.util.Mathematics;
 import api.util.Support;
 
 import java.awt.AWTEvent;
@@ -105,7 +105,7 @@ public class Scramble
 		// Pick a letter randomly from the list, remove it from the list, and then append it to the output string.
 		while (characters.size() != 0)
 		{
-			int randPicker = Games.getRandomInteger(0, characters.size(), false);
+			int randPicker = Mathematics.getRandomInteger(0, characters.size(), false);
 			output.append(characters.remove(randPicker));
 		}
 		
@@ -343,7 +343,7 @@ public class Scramble
 	public final void pickWord()
 	{
 		// Randomly select a word from the master word list.
-		this.setCurrentWord(Games.getRandomInteger(0, (this.getWordsArray().length - 1), true));
+		this.setCurrentWord(Mathematics.getRandomInteger(0, (this.getWordsArray().length - 1), true));
 		// Rearrange the word in a random order.
 		this.setScrambledWord(Scramble.shuffleWord(this.getWordsArray()[this.getCurrentWord()].toString()));
 		// Set the number of available guesses.
