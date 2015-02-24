@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import api.gui.ApplicationWindow;
+import api.gui.swing.ApplicationWindow;
 import api.util.EventHandler;
 import api.util.Mathematics;
 import api.util.Support;
