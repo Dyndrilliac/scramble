@@ -211,8 +211,8 @@ public class Scramble
 			}
 		};
 		
-		this.setWindow(new ApplicationWindow(null, this.getTitle(), new Dimension(380, 125), this.isDebugging(),
-			false, myActionPerformed, myDrawGUI));
+		this.setWindow(new ApplicationWindow(null, this.getTitle(), new Dimension(380, 125), this.isDebugging(), false, 
+			myActionPerformed, myDrawGUI));
 		this.getWindow().setIconImageByResourceName("icon.png");
 	}
 	
@@ -371,8 +371,8 @@ public class Scramble
 	{
 		JOptionPane.showMessageDialog(window,
 			"Puzzle:   " + this.getScrambledWord() + "\n" +
-				"Solution: " + this.getWordsArray()[this.getCurrentWord()] + "\n\n" +
-				"Better luck next time!\n",
+			"Solution: " + this.getWordsArray()[this.getCurrentWord()] + "\n\n" +
+			"Better luck next time!\n",
 			"Solution to Puzzle",
 			JOptionPane.INFORMATION_MESSAGE);
 		this.reinitialize(window);
