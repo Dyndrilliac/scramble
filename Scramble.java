@@ -127,6 +127,7 @@ public class Scramble
         this.setWordsArray(Scramble.getWordBank(this.getWindow(), this.isDebugging()));
         
         // Define a self-contained ActionListener event handler.
+        // @formatter:off
         EventHandler<Scramble> myActionPerformed = new EventHandler<Scramble>(this)
         {
             private final static long serialVersionUID = 1L;
@@ -210,6 +211,7 @@ public class Scramble
         
         this.setWindow(new ApplicationWindow(null, this.getTitle(), new Dimension(380, 125), this.isDebugging(), false, myActionPerformed, myDrawGUI));
         this.getWindow().setIconImageByResourceName("icon.png");
+        // @formatter:on
     }
     
     protected final double calculateScore()
@@ -363,12 +365,12 @@ public class Scramble
     public final void revealAnswer(final ApplicationWindow window)
     {
         JOptionPane.showMessageDialog(window,
-            "Puzzle:   " + this.getScrambledWord()
-                + "\n"
-                + "Solution: "
-                + this.getWordsArray()[this.getCurrentWord()]
-                + "\n\n"
-                + "Better luck next time!\n",
+            "Puzzle:   " + this.getScrambledWord() +
+                "\n" +
+                "Solution: " +
+                this.getWordsArray()[this.getCurrentWord()] +
+                "\n\n" +
+                "Better luck next time!\n",
             "Solution to Puzzle",
             JOptionPane.INFORMATION_MESSAGE);
         this.reinitialize(window);
