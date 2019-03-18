@@ -209,7 +209,7 @@ public class Scramble
             }
         };
         
-        this.setWindow(new ApplicationWindow(null, this.getTitle(), new Dimension(380, 125), this.isDebugging(), false, myActionPerformed, myDrawGUI));
+        this.setWindow(new ApplicationWindow(null, this.getTitle(), new Dimension(500, 150), this.isDebugging(), false, myActionPerformed, myDrawGUI));
         this.getWindow().setIconImageByResourceName("icon.png");
         // @formatter:on
     }
